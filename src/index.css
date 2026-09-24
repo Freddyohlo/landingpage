@@ -238,3 +238,13 @@ button:disabled { cursor: wait; opacity: .7; }
   .hero-grid { padding-top: 48px; }
   .assistant-card { margin-bottom: 12px; }
 }
+
+/* Respect users who prefer less motion: disable decorative animation and smooth scroll. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}

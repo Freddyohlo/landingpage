@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ArrowUpRight,
   ChevronDown,
@@ -20,7 +20,19 @@ type Project = {
   project_url: string | null;
   featured: boolean;
   image: string;
+  width: number;
+  height: number;
 };
+
+const LINKEDIN_URL = 'https://www.linkedin.com/in/freddy-p%C3%A9rez-toro/';
+const GITHUB_URL = 'https://github.com/Freddyohlo';
+
+const NAV_LINKS = [
+  { id: 'sobre-mi', label: 'Sobre mí' },
+  { id: 'experiencia', label: 'Experiencia' },
+  { id: 'proyectos', label: 'Proyectos' },
+  { id: 'contacto', label: 'Contacto' },
+] as const;
 
 const projects: Project[] = [
   {
@@ -28,9 +40,11 @@ const projects: Project[] = [
     title: 'Web Inmobiliaria',
     description: 'Plataforma web para gestión y publicación de propiedades, con buscador avanzado y panel de administración.',
     tech_stack: ['React', 'TypeScript', 'Supabase'],
-    project_url: null,
+    project_url: 'https://terreno-ruddy.vercel.app',
     featured: true,
     image: '/images/inmobiliaria.jpg',
+    width: 1200,
+    height: 536,
   },
   {
     id: 'project-2',
@@ -40,6 +54,8 @@ const projects: Project[] = [
     project_url: null,
     featured: false,
     image: '/images/litio.jpg',
+    width: 800,
+    height: 368,
   },
   {
     id: 'project-3',
@@ -48,16 +64,20 @@ const projects: Project[] = [
     tech_stack: ['Web3', 'Solidity', 'React'],
     project_url: null,
     featured: false,
-    image: '/images/wallet.JPG',
+    image: '/images/wallet.jpg',
+    width: 1200,
+    height: 539,
   },
   {
     id: 'project-4',
     title: 'Sistema Gestión de Inventarios',
     description: 'Sistema integral para control de stock, recepción, despacho y reportes de inventario en tiempo real.',
     tech_stack: ['JavaScript', 'SQL', 'UX'],
-    project_url: null,
+    project_url: 'https://github.com/Freddyohlo/inventario-interno',
     featured: false,
-    image: '/images/inventario.JPG',
+    image: '/images/inventario.jpg',
+    width: 1100,
+    height: 558,
   },
   {
     id: 'project-5',
@@ -67,6 +87,8 @@ const projects: Project[] = [
     project_url: null,
     featured: false,
     image: '/images/agente.jpg',
+    width: 1200,
+    height: 655,
   },
 ];
 
@@ -118,14 +140,43 @@ const skills = ['Análisis de sistemas', 'Programación', 'Logística', 'Optimiz
 function App() {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [showAllExperience, setShowAllExperience] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('sobre-mi');
 
   const visibleExperiences = useMemo(
     () => (showAllExperience ? experiences : experiences.slice(0, 3)),
     [showAllExperience],
   );
 
+  const currentYear = useMemo(() => new Date().getFullYear(), []);
+
+  // Highlight the nav item whose section is closest to the sticky header.
+  useEffect(() => {
+    const sections = NAV_LINKS.map(({ id }) => document.getElementById(id)).filter(
+      (section): section is HTMLElement => section !== null,
+    );
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) setActiveSection(visible[0].target.id);
+      },
+      { rootMargin: '-96px 0px -60% 0px', threshold: 0 },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
   function scrollTo(id: string) {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    const target = document.getElementById(id);
+    if (!target) return;
+    const header = document.querySelector('header');
+    const offset = header instanceof HTMLElement ? header.offsetHeight + 16 : 84;
+    const top = target.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: 'smooth' });
     setMenuOpen(false);
   }
 
@@ -138,20 +189,26 @@ function App() {
             <span className="hidden text-[15px] font-bold tracking-[-0.02em] text-[#172b4d] sm:block">FREDDY PÉREZ</span>
           </button>
           <nav className="hidden items-center gap-8 text-[14px] font-semibold text-[#52677d] md:flex">
-            <button className="nav-link active" onClick={() => scrollTo('sobre-mi')}>Sobre mí</button>
-            <button className="nav-link" onClick={() => scrollTo('experiencia')}>Experiencia</button>
-            <button className="nav-link" onClick={() => scrollTo('proyectos')}>Proyectos</button>
-            <button className="nav-link" onClick={() => scrollTo('contacto')}>Contacto</button>
+            {NAV_LINKS.map(({ id, label }) => (
+              <button
+                key={id}
+                className={`nav-link${activeSection === id ? ' active' : ''}`}
+                aria-current={activeSection === id ? 'true' : undefined}
+                onClick={() => scrollTo(id)}
+              >
+                {label}
+              </button>
+            ))}
           </nav>
           <div className="hidden items-center gap-3 sm:flex">
-            <a className="icon-button" href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={18} /></a>
+            <a className="icon-button" href={LINKEDIN_URL} target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={18} /></a>
             <a className="button-outline" href="mailto:freddy.perez.t@gmail.com">Hablemos <ArrowUpRight size={15} /></a>
           </div>
-          <button className="rounded-md p-2 text-[#172b4d] md:hidden" onClick={() => setMenuOpen((current) => !current)} aria-label="Abrir menú">
+          <button className="rounded-md p-2 text-[#172b4d] md:hidden" onClick={() => setMenuOpen((current) => !current)} aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={isMenuOpen} aria-controls="mobile-menu">
             {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
-        {isMenuOpen && <div className="border-t border-[#e4ebf0] bg-white px-5 py-4 md:hidden"><div className="flex flex-col gap-4 text-sm font-semibold"><button onClick={() => scrollTo('sobre-mi')}>Sobre mí</button><button onClick={() => scrollTo('experiencia')}>Experiencia</button><button onClick={() => scrollTo('proyectos')}>Proyectos</button><button onClick={() => scrollTo('contacto')}>Contacto</button></div></div>}
+        {isMenuOpen && <div id="mobile-menu" className="border-t border-[#e4ebf0] bg-white px-5 py-4 md:hidden"><div className="flex flex-col gap-4 text-sm font-semibold">{NAV_LINKS.map(({ id, label }) => <button key={id} onClick={() => scrollTo(id)}>{label}</button>)}</div></div>}
       </header>
 
       <main id="inicio">
@@ -172,11 +229,11 @@ function App() {
 
         <section id="experiencia" className="mx-auto max-w-[1180px] px-5 py-20 lg:px-8"><div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="section-kicker">02 / Trayectoria</p><h2 className="section-title mt-4">Experiencia que se construyó en terreno.</h2></div><span className="text-sm text-[#71859a]">2005 — actualidad</span></div><div className="mt-12 space-y-0">{visibleExperiences.map((experience) => <article className="timeline-item grid gap-4 border-t border-[#dce5ec] py-7 sm:grid-cols-[150px_1fr] lg:grid-cols-[180px_1fr_320px]" key={experience.company}><div className="flex items-start gap-3 text-sm font-semibold text-[#71859a]"><span className={`timeline-dot ${experience.color}`} />{experience.period}</div><div><h3 className="text-[18px] font-bold text-[#172b4d]">{experience.role}</h3><p className="mt-1 font-semibold text-[#0a66c2]">{experience.company}</p><p className="mt-2 text-sm text-[#71859a]">{experience.detail}</p></div><p className="text-sm leading-6 text-[#52677d] lg:pt-1">{experience.description}</p></article>)}</div><button className="button-quiet mt-3" onClick={() => setShowAllExperience((current) => !current)}>{showAllExperience ? 'Ver menos' : 'Ver trayectoria completa'} <ChevronDown className={showAllExperience ? 'rotate-180' : ''} size={16} /></button></section>
 
-        <section id="proyectos" className="border-y border-[#dce5ec] bg-[#eaf2f8]"><div className="mx-auto max-w-[1180px] px-5 py-20 lg:px-8"><div><p className="section-kicker">03 / Proyectos</p><h2 className="section-title mt-4">Ideas que estoy convirtiendo en herramientas.</h2><p className="mt-4 max-w-[540px] leading-7 text-[#52677d]">Una selección de proyectos y experimentos para mostrar cómo pienso, diseño y construyo.</p></div><div className="mt-12 grid gap-5 md:grid-cols-3">{projects.map((project, index) => <article className={`project-card group ${project.featured ? 'featured-card md:col-span-2' : ''}`} key={project.id}><div className="project-visual"><img src={project.image} alt={project.title} className="project-image" loading="lazy" /><span className="project-number">0{index + 1}</span>{project.featured && <span className="featured-label">Destacado</span>}</div><div className="p-5"><div className="flex items-start justify-between gap-3"><h3 className="text-[18px] font-bold leading-6 text-[#172b4d] group-hover:text-[#0a66c2]">{project.title}</h3>{project.project_url && <a href={project.project_url} target="_blank" rel="noreferrer" className="text-[#71859a] hover:text-[#0a66c2]" aria-label={`Abrir ${project.title}`}><ExternalLink size={17} /></a>}</div><p className="mt-3 text-sm leading-6 text-[#52677d]">{project.description}</p><div className="mt-5 flex flex-wrap gap-2">{project.tech_stack.map((tech) => <span className="project-tag" key={tech}>{tech}</span>)}</div></div></article>)}</div></div></section>
+        <section id="proyectos" className="scroll-mt-24 border-y border-[#dce5ec] bg-[#eaf2f8]"><div className="mx-auto max-w-[1180px] px-5 py-20 lg:px-8"><div><p className="section-kicker">03 / Proyectos</p><h2 className="section-title mt-4">Ideas que estoy convirtiendo en herramientas.</h2><p className="mt-4 max-w-[540px] leading-7 text-[#52677d]">Una selección de proyectos y experimentos para mostrar cómo pienso, diseño y construyo.</p></div><div className="mt-12 grid gap-5 md:grid-cols-3">{projects.map((project, index) => <article className={`project-card group ${project.featured ? 'featured-card md:col-span-2' : ''}`} key={project.id}><div className="project-visual"><img src={project.image} alt={`Vista del proyecto ${project.title}`} className="project-image" loading="lazy" decoding="async" width={project.width} height={project.height} /><span className="project-number">0{index + 1}</span>{project.featured && <span className="featured-label">Destacado</span>}</div><div className="p-5"><div className="flex items-start justify-between gap-3"><h3 className="text-[18px] font-bold leading-6 text-[#172b4d] group-hover:text-[#0a66c2]">{project.title}</h3>{project.project_url && <a href={project.project_url} target="_blank" rel="noreferrer" className="text-[#71859a] transition-colors hover:text-[#0a66c2]" aria-label={`Abrir ${project.title} en una pestaña nueva`}><ExternalLink size={17} /></a>}</div><p className="mt-3 text-sm leading-6 text-[#52677d]">{project.description}</p><div className="mt-5 flex flex-wrap gap-2">{project.tech_stack.map((tech) => <span className="project-tag" key={tech}>{tech}</span>)}</div></div></article>)}</div></div></section>
 
         <section id="contacto" className="mx-auto max-w-[1180px] px-5 py-20 lg:px-8"><div className="rounded-2xl bg-[#172b4d] px-7 py-12 text-white sm:px-12 lg:flex lg:items-center lg:justify-between lg:px-16"><div><p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8dc7f4]">04 / Contacto</p><h2 className="mt-4 max-w-[550px] text-3xl font-bold leading-tight tracking-[-0.04em] sm:text-4xl">¿Tienes un desafío que podamos ordenar juntos?</h2><p className="mt-4 max-w-[500px] leading-7 text-[#bbcad8]">Estoy abierto a conversar sobre operaciones, tecnología y proyectos donde el pensamiento práctico pueda marcar una diferencia.</p></div><div className="mt-8 flex flex-wrap gap-3 lg:mt-0 lg:max-w-[235px]"><a className="button-light" href="mailto:freddy.perez.t@gmail.com"><Send size={16} /> Escribirme</a><a className="button-dark" href="tel:+56952514280"><span>+56 9 5251 4280</span><ArrowUpRight size={15} /></a></div></div></section>
       </main>
-      <footer className="border-t border-[#dce5ec] bg-white"><div className="mx-auto flex max-w-[1180px] flex-col gap-4 px-5 py-7 text-sm text-[#71859a] sm:flex-row sm:items-center sm:justify-between lg:px-8"><p>© 2024 Freddy Pérez. Hecho con intención.</p><div className="flex items-center gap-4"><a href="https://www.linkedin.com" target="_blank" rel="noreferrer" className="hover:text-[#0a66c2]"><Linkedin size={17} /></a><a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-[#0a66c2]"><Github size={17} /></a></div></div></footer>
+      <footer className="border-t border-[#dce5ec] bg-white"><div className="mx-auto flex max-w-[1180px] flex-col gap-4 px-5 py-7 text-sm text-[#71859a] sm:flex-row sm:items-center sm:justify-between lg:px-8"><p>© {currentYear} Freddy Pérez. Hecho con intención.</p><div className="flex items-center gap-4"><a href={LINKEDIN_URL} target="_blank" rel="noreferrer" className="transition-colors hover:text-[#0a66c2]" aria-label="LinkedIn"><Linkedin size={17} /></a><a href={GITHUB_URL} target="_blank" rel="noreferrer" className="transition-colors hover:text-[#0a66c2]" aria-label="GitHub"><Github size={17} /></a></div></div></footer>
     </div>
   );
 }
