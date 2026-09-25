@@ -90,6 +90,17 @@ const projects: Project[] = [
     width: 1200,
     height: 655,
   },
+  {
+    id: 'project-6',
+    title: 'Bodega (demo)',
+    description: 'Demo visual de un sistema de inventario y documentos para pyme: catálogo con margen, libro de stock y documentos numerados. Solo muestra la interfaz; no crea ni modifica datos.',
+    tech_stack: ['FastAPI', 'Python', 'SQLite', 'JavaScript'],
+    project_url: 'https://inventario-2-keib.vercel.app/',
+    featured: false,
+    image: '/images/bodega.jpg',
+    width: 1100,
+    height: 558,
+  },
 ];
 
 const experiences = [
