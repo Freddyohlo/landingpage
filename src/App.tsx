@@ -40,7 +40,7 @@ const projects: Project[] = [
     title: 'Web Inmobiliaria',
     description: 'Plataforma web para gestión y publicación de propiedades, con buscador avanzado y panel de administración.',
     tech_stack: ['React', 'TypeScript', 'Supabase'],
-    project_url: 'https://terreno-ruddy.vercel.app',
+    project_url: 'https://inmobiliariavregion.surge.sh',
     featured: true,
     image: '/images/inmobiliaria.jpg',
     width: 1200,
