@@ -60,9 +60,9 @@ const projects: Project[] = [
   {
     id: 'project-3',
     title: 'Billetera Web3',
-    description: 'Billetera digital descentralizada para gestión de activos en blockchain, con firma de transacciones y conexión a dApps.',
-    tech_stack: ['Web3', 'Solidity', 'React'],
-    project_url: null,
+    description: 'Aplicación descentralizada que conecta una billetera Ethereum (Mainnet y Sepolia) para consultar saldo e interactuar con la red.',
+    tech_stack: ['Next.js', 'wagmi', 'viem', 'RainbowKit'],
+    project_url: 'https://walletweb3portafolio.netlify.app/',
     featured: false,
     image: '/images/wallet.jpg',
     width: 1200,
