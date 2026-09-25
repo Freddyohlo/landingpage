@@ -73,7 +73,7 @@ const projects: Project[] = [
     title: 'Sistema Gestión de Inventarios',
     description: 'Sistema integral para control de stock, recepción, despacho y reportes de inventario en tiempo real.',
     tech_stack: ['JavaScript', 'SQL', 'UX'],
-    project_url: 'https://github.com/Freddyohlo/inventario-interno',
+    project_url: 'https://inventario-interno.surge.sh',
     featured: false,
     image: '/images/inventario.jpg',
     width: 1100,
