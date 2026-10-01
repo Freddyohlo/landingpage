@@ -22,6 +22,7 @@ type Project = {
   image: string;
   width: number;
   height: number;
+  featured?: boolean;
 };
 
 const LINKEDIN_URL = 'https://www.linkedin.com/in/freddy-p%C3%A9rez-toro/';
@@ -40,11 +41,12 @@ const projects: Project[] = [
     title: 'Corredor · Remesas con stablecoins',
     description: 'Demo no-custodial (testnet) para enviar remesas Chile → Venezuela / Haití con stablecoins: cotizador con costo total real, flujo por estados y screening de sanciones. Incluye enfoque de cumplimiento (Ley Fintech, AML, OFAC).',
     tech_stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Web3'],
-    project_url: null,
+    project_url: 'https://corredor-chi.vercel.app/',
     repo_url: 'https://github.com/Freddyohlo/corredor',
     image: '/images/corredor.png',
     width: 1200,
     height: 630,
+    featured: true,
   },
   {
     id: 'project-1',
@@ -113,6 +115,9 @@ const projects: Project[] = [
     height: 558,
   },
 ];
+
+const featuredProject = projects.find((project) => project.featured);
+const otherProjects = projects.filter((project) => !project.featured);
 
 const experiences = [
   {
@@ -251,7 +256,25 @@ function App() {
 
         <section id="experiencia" className="mx-auto max-w-[1180px] px-5 py-20 lg:px-8"><div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="section-kicker">02 / Trayectoria</p><h2 className="section-title mt-4">Experiencia que se construyó en terreno.</h2></div><span className="text-sm text-[#71859a]">2005 — actualidad</span></div><div className="mt-12 space-y-0">{visibleExperiences.map((experience) => <article className="timeline-item grid gap-4 border-t border-[#dce5ec] py-7 sm:grid-cols-[150px_1fr] lg:grid-cols-[180px_1fr_320px]" key={experience.company}><div className="flex items-start gap-3 text-sm font-semibold text-[#71859a]"><span className={`timeline-dot ${experience.color}`} />{experience.period}</div><div><h3 className="text-[18px] font-bold text-[#172b4d]">{experience.role}</h3><p className="mt-1 font-semibold text-[#0a66c2]">{experience.company}</p><p className="mt-2 text-sm text-[#71859a]">{experience.detail}</p></div><p className="text-sm leading-6 text-[#52677d] lg:pt-1">{experience.description}</p></article>)}</div><button className="button-quiet mt-3" onClick={() => setShowAllExperience((current) => !current)}>{showAllExperience ? 'Ver menos' : 'Ver trayectoria completa'} <ChevronDown className={showAllExperience ? 'rotate-180' : ''} size={16} /></button></section>
 
-        <section id="proyectos" className="scroll-mt-24 border-y border-[#dce5ec] bg-[#eaf2f8]"><div className="mx-auto max-w-[1180px] px-5 py-20 lg:px-8"><div><p className="section-kicker">03 / Proyectos</p><h2 className="section-title mt-4">Ideas que estoy convirtiendo en herramientas.</h2><p className="mt-4 max-w-[540px] leading-7 text-[#52677d]">Una selección de proyectos y experimentos para mostrar cómo pienso, diseño y construyo.</p></div><div className="mt-12 grid gap-5 md:grid-cols-3">{projects.map((project, index) => <article className="project-card group" key={project.id}><div className="project-visual"><img src={project.image} alt={`Vista del proyecto ${project.title}`} className="project-image" loading="lazy" decoding="async" width={project.width} height={project.height} /><span className="project-number">0{index + 1}</span></div><div className="p-5"><div className="flex items-start justify-between gap-3"><h3 className="text-[18px] font-bold leading-6 text-[#172b4d] group-hover:text-[#0a66c2]">{project.title}</h3><div className="flex items-center gap-3">{project.repo_url && <a href={project.repo_url} target="_blank" rel="noreferrer" className="text-[#71859a] transition-colors hover:text-[#0a66c2]" aria-label={`Ver el código de ${project.title} en GitHub`}><Github size={17} /></a>}{project.project_url && <a href={project.project_url} target="_blank" rel="noreferrer" className="text-[#71859a] transition-colors hover:text-[#0a66c2]" aria-label={`Abrir ${project.title} en una pestaña nueva`}><ExternalLink size={17} /></a>}</div></div><p className="mt-3 text-sm leading-6 text-[#52677d]">{project.description}</p><div className="mt-5 flex flex-wrap gap-2">{project.tech_stack.map((tech) => <span className="project-tag" key={tech}>{tech}</span>)}</div></div></article>)}</div></div></section>
+        <section id="proyectos" className="scroll-mt-24 border-y border-[#dce5ec] bg-[#eaf2f8]"><div className="mx-auto max-w-[1180px] px-5 py-20 lg:px-8"><div><p className="section-kicker">03 / Proyectos</p><h2 className="section-title mt-4">Ideas que estoy convirtiendo en herramientas.</h2><p className="mt-4 max-w-[540px] leading-7 text-[#52677d]">Una selección de proyectos y experimentos para mostrar cómo pienso, diseño y construyo.</p></div>
+          {featuredProject && (
+            <article className="featured-card group mt-12">
+              <div className="featured-media">
+                <img src={featuredProject.image} alt={`Vista del proyecto ${featuredProject.title}`} className="featured-image" loading="lazy" decoding="async" width={featuredProject.width} height={featuredProject.height} />
+                <span className="featured-badge">Proyecto destacado</span>
+              </div>
+              <div className="featured-body">
+                <h3 className="text-2xl font-bold leading-8 text-[#172b4d] group-hover:text-[#0a66c2]">{featuredProject.title}</h3>
+                <p className="mt-3 max-w-[560px] leading-7 text-[#52677d]">{featuredProject.description}</p>
+                <div className="mt-5 flex flex-wrap gap-2">{featuredProject.tech_stack.map((tech) => <span className="project-tag" key={tech}>{tech}</span>)}</div>
+                <div className="mt-7 flex flex-wrap gap-3">
+                  {featuredProject.project_url && <a className="button-primary" href={featuredProject.project_url} target="_blank" rel="noreferrer"><ExternalLink size={16} /> Ver demo en vivo</a>}
+                  {featuredProject.repo_url && <a className="button-outline" href={featuredProject.repo_url} target="_blank" rel="noreferrer"><Github size={16} /> Ver código</a>}
+                </div>
+              </div>
+            </article>
+          )}
+          <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">{otherProjects.map((project, index) => <article className="project-card group" key={project.id}><div className="project-visual"><img src={project.image} alt={`Vista del proyecto ${project.title}`} className="project-image" loading="lazy" decoding="async" width={project.width} height={project.height} /><span className="project-number">0{index + 2}</span></div><div className="p-5"><div className="flex items-start justify-between gap-3"><h3 className="text-[18px] font-bold leading-6 text-[#172b4d] group-hover:text-[#0a66c2]">{project.title}</h3><div className="flex items-center gap-3">{project.repo_url && <a href={project.repo_url} target="_blank" rel="noreferrer" className="text-[#71859a] transition-colors hover:text-[#0a66c2]" aria-label={`Ver el código de ${project.title} en GitHub`}><Github size={17} /></a>}{project.project_url && <a href={project.project_url} target="_blank" rel="noreferrer" className="text-[#71859a] transition-colors hover:text-[#0a66c2]" aria-label={`Abrir ${project.title} en una pestaña nueva`}><ExternalLink size={17} /></a>}</div></div><p className="mt-3 text-sm leading-6 text-[#52677d]">{project.description}</p><div className="mt-5 flex flex-wrap gap-2">{project.tech_stack.map((tech) => <span className="project-tag" key={tech}>{tech}</span>)}</div></div></article>)}</div></div></section>
 
         <section id="contacto" className="mx-auto max-w-[1180px] px-5 py-20 lg:px-8"><div className="rounded-2xl bg-[#172b4d] px-7 py-12 text-white sm:px-12 lg:flex lg:items-center lg:justify-between lg:px-16"><div><p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8dc7f4]">04 / Contacto</p><h2 className="mt-4 max-w-[550px] text-3xl font-bold leading-tight tracking-[-0.04em] sm:text-4xl">¿Tienes un desafío que podamos ordenar juntos?</h2><p className="mt-4 max-w-[500px] leading-7 text-[#bbcad8]">Estoy abierto a conversar sobre operaciones, tecnología y proyectos donde el pensamiento práctico pueda marcar una diferencia.</p></div><div className="mt-8 flex flex-wrap gap-3 lg:mt-0 lg:max-w-[235px]"><a className="button-light" href="mailto:freddy.perez.t@gmail.com"><Send size={16} /> Escribirme</a><a className="button-dark" href="tel:+56952514280"><span>+56 9 5251 4280</span><ArrowUpRight size={15} /></a></div></div></section>
       </main>

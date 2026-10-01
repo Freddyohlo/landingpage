@@ -41,6 +41,20 @@ button:disabled { cursor: wait; opacity: .7; }
 .project-visual .project-number { z-index: 2; }
 .project-number { position: absolute; left: 18px; top: 15px; font-size: 12px; font-weight: 700; color: white; opacity: .85; }
 .project-tag { border-radius: 4px; background: #f3f6f8; padding: 5px 8px; font-size: 10px; }
+
+.featured-card { overflow: hidden; border: 1px solid #cfdded; border-radius: 16px; background: white; box-shadow: 0 20px 45px rgba(23,43,77,.09); transition: transform .25s ease, box-shadow .25s ease; }
+.featured-card:hover { transform: translateY(-4px); box-shadow: 0 28px 60px rgba(23,43,77,.14); }
+.featured-media { position: relative; aspect-ratio: 16 / 7; overflow: hidden; background: #0a66c2; }
+.featured-image { position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; object-position: top center; transition: transform .5s ease; }
+.featured-card:hover .featured-image { transform: scale(1.03); }
+.featured-media::before { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,40,80,0) 45%, rgba(10,40,80,.5) 100%); content: ''; z-index: 1; }
+.featured-badge { position: absolute; left: 18px; top: 16px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; background: #0a66c2; padding: 6px 12px; font-size: 11px; font-weight: 700; color: white; letter-spacing: .04em; }
+.featured-body { padding: 26px 24px 30px; }
+@media (min-width: 900px) {
+  .featured-card { display: grid; grid-template-columns: 1.15fr 1fr; align-items: stretch; }
+  .featured-media { aspect-ratio: auto; min-height: 340px; }
+  .featured-body { display: flex; flex-direction: column; justify-content: center; padding: 34px 34px 34px 30px; }
+}
 .timeline-item { position: relative; }
 .timeline-dot { margin-top: 4px; height: 9px; width: 9px; flex: none; border-radius: 999px; background: #0a66c2; box-shadow: 0 0 0 4px #e2effa; }
 .timeline-dot.orange { background: #d36b2f; box-shadow: 0 0 0 4px #fae8de; }.timeline-dot.green { background: #287a4c; box-shadow: 0 0 0 4px #e2f2e8; }.timeline-dot.slate { background: #70859a; box-shadow: 0 0 0 4px #e9eef2; }
