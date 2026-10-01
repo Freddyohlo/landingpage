@@ -11,6 +11,8 @@ import {
   X,
 } from 'lucide-react';
 import AssistantGuide from '@/components/AssistantGuide';
+import WeatherWidget from '@/components/WeatherWidget';
+import GamesSection from '@/components/GamesSection';
 
 type Project = {
   id: string;
@@ -32,6 +34,7 @@ const NAV_LINKS = [
   { id: 'sobre-mi', label: 'Sobre mí' },
   { id: 'experiencia', label: 'Experiencia' },
   { id: 'proyectos', label: 'Proyectos' },
+  { id: 'juegos', label: 'Juegos' },
   { id: 'contacto', label: 'Contacto' },
 ] as const;
 
@@ -246,6 +249,7 @@ function App() {
             <p className="mt-7 max-w-[570px] text-[17px] leading-8 text-[#52677d]">Soy Freddy Pérez, profesional de operaciones y analista de sistemas en formación. Me gusta entender cómo funcionan las cosas y construir formas más simples de hacerlas mejor.</p>
             <div className="mt-9 flex flex-wrap gap-3"><button className="button-primary" onClick={() => scrollTo('proyectos')}>Ver mis proyectos <ArrowUpRight size={16} /></button><button className="button-quiet" onClick={() => scrollTo('sobre-mi')}>Conocer mi historia <ChevronDown size={16} /></button></div>
             <div className="mt-12 flex items-center gap-5 text-sm text-[#71859a]"><span className="flex items-center gap-2"><MapPin size={16} className="text-[#0a66c2]" /> Quilicura, Santiago</span><span className="h-1 w-1 rounded-full bg-[#a8b8c5]" /><span>Chile</span></div>
+            <WeatherWidget />
           </div>
           <div className="relative mx-auto w-full max-w-[420px]">
             <AssistantGuide onNavigate={scrollTo} />
@@ -276,7 +280,9 @@ function App() {
           )}
           <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">{otherProjects.map((project, index) => <article className="project-card group" key={project.id}><div className="project-visual"><img src={project.image} alt={`Vista del proyecto ${project.title}`} className="project-image" loading="lazy" decoding="async" width={project.width} height={project.height} /><span className="project-number">0{index + 2}</span></div><div className="p-5"><div className="flex items-start justify-between gap-3"><h3 className="text-[18px] font-bold leading-6 text-[#172b4d] group-hover:text-[#0a66c2]">{project.title}</h3><div className="flex items-center gap-3">{project.repo_url && <a href={project.repo_url} target="_blank" rel="noreferrer" className="text-[#71859a] transition-colors hover:text-[#0a66c2]" aria-label={`Ver el código de ${project.title} en GitHub`}><Github size={17} /></a>}{project.project_url && <a href={project.project_url} target="_blank" rel="noreferrer" className="text-[#71859a] transition-colors hover:text-[#0a66c2]" aria-label={`Abrir ${project.title} en una pestaña nueva`}><ExternalLink size={17} /></a>}</div></div><p className="mt-3 text-sm leading-6 text-[#52677d]">{project.description}</p><div className="mt-5 flex flex-wrap gap-2">{project.tech_stack.map((tech) => <span className="project-tag" key={tech}>{tech}</span>)}</div></div></article>)}</div></div></section>
 
-        <section id="contacto" className="mx-auto max-w-[1180px] px-5 py-20 lg:px-8"><div className="rounded-2xl bg-[#172b4d] px-7 py-12 text-white sm:px-12 lg:flex lg:items-center lg:justify-between lg:px-16"><div><p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8dc7f4]">04 / Contacto</p><h2 className="mt-4 max-w-[550px] text-3xl font-bold leading-tight tracking-[-0.04em] sm:text-4xl">¿Tienes un desafío que podamos ordenar juntos?</h2><p className="mt-4 max-w-[500px] leading-7 text-[#bbcad8]">Estoy abierto a conversar sobre operaciones, tecnología y proyectos donde el pensamiento práctico pueda marcar una diferencia.</p></div><div className="mt-8 flex flex-wrap gap-3 lg:mt-0 lg:max-w-[235px]"><a className="button-light" href="mailto:freddy.perez.t@gmail.com"><Send size={16} /> Escribirme</a><a className="button-dark" href="tel:+56952514280"><span>+56 9 5251 4280</span><ArrowUpRight size={15} /></a></div></div></section>
+        <GamesSection />
+
+        <section id="contacto" className="mx-auto max-w-[1180px] px-5 py-20 lg:px-8"><div className="rounded-2xl bg-[#172b4d] px-7 py-12 text-white sm:px-12 lg:flex lg:items-center lg:justify-between lg:px-16"><div><p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8dc7f4]">05 / Contacto</p><h2 className="mt-4 max-w-[550px] text-3xl font-bold leading-tight tracking-[-0.04em] sm:text-4xl">¿Tienes un desafío que podamos ordenar juntos?</h2><p className="mt-4 max-w-[500px] leading-7 text-[#bbcad8]">Estoy abierto a conversar sobre operaciones, tecnología y proyectos donde el pensamiento práctico pueda marcar una diferencia.</p></div><div className="mt-8 flex flex-wrap gap-3 lg:mt-0 lg:max-w-[235px]"><a className="button-light" href="mailto:freddy.perez.t@gmail.com"><Send size={16} /> Escribirme</a><a className="button-dark" href="tel:+56952514280"><span>+56 9 5251 4280</span><ArrowUpRight size={15} /></a></div></div></section>
       </main>
       <footer className="border-t border-[#dce5ec] bg-white"><div className="mx-auto flex max-w-[1180px] flex-col gap-4 px-5 py-7 text-sm text-[#71859a] sm:flex-row sm:items-center sm:justify-between lg:px-8"><p>© {currentYear} Freddy Pérez. Hecho con intención.</p><div className="flex items-center gap-4"><a href={LINKEDIN_URL} target="_blank" rel="noreferrer" className="transition-colors hover:text-[#0a66c2]" aria-label="LinkedIn"><Linkedin size={17} /></a><a href={GITHUB_URL} target="_blank" rel="noreferrer" className="transition-colors hover:text-[#0a66c2]" aria-label="GitHub"><Github size={17} /></a></div></div></footer>
     </div>
