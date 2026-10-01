@@ -130,42 +130,51 @@ export default function WeatherWidget() {
   const weatherInfo = weather ? describe(weather.code) : null;
 
   return (
-    <div className="weather-widget">
-      <div className="weather-widget__row">
-        <span className="weather-widget__icon" aria-hidden="true">
-          <Clock size={16} />
-        </span>
-        <div>
-          <p className="weather-widget__time">{time}</p>
-          <p className="weather-widget__meta">{date}</p>
+    <div className="weather-strip">
+      <div className="weather-strip__inner">
+        <div className="weather-strip__item">
+          <span className="weather-strip__icon" aria-hidden="true">
+            <Clock size={15} />
+          </span>
+          <span className="weather-strip__value">{time}</span>
+          <span className="weather-strip__label">{date}</span>
         </div>
-      </div>
 
-      <div className="weather-widget__divider" />
+        <span className="weather-strip__sep" aria-hidden="true" />
 
-      <div className="weather-widget__row">
-        <span className="weather-widget__icon" aria-hidden="true">
-          {weatherInfo ? weatherInfo.icon : '🌡️'}
-        </span>
-        <div>
-          <p className="weather-widget__time">
-            {status === 'loading' ? 'Cargando…' : weather ? `${weather.temp}°C` : '—'}
-            {weatherInfo && <span className="weather-widget__label"> · {weatherInfo.label}</span>}
-          </p>
-          <p className="weather-widget__meta">
-            <MapPin size={12} className="weather-widget__pin" />
+        <div className="weather-strip__item">
+          <span className="weather-strip__icon" aria-hidden="true">
+            {weatherInfo ? weatherInfo.icon : '🌡️'}
+          </span>
+          <span className="weather-strip__value">
+            {status === 'loading' ? '…' : weather ? `${weather.temp}°C` : '—'}
+          </span>
+          {weatherInfo && (
+            <span className="weather-strip__label">{weatherInfo.label}</span>
+          )}
+        </div>
+
+        <span className="weather-strip__sep" aria-hidden="true" />
+
+        <div className="weather-strip__item">
+          <MapPin size={14} className="weather-strip__pin" aria-hidden="true" />
+          <span className="weather-strip__label">
             {geo.city}
             {geo.country ? `, ${geo.country}` : ''}
             {status === 'fallback' && ' (aprox.)'}
-          </p>
+          </span>
+        </div>
+
+        <span className="weather-strip__sep weather-strip__sep--wide" aria-hidden="true" />
+
+        <div className="weather-strip__item weather-strip__item--tz">
+          <span className="weather-strip__label">
+            {status === 'loading'
+              ? 'Detectando tu zona horaria…'
+              : `Zona horaria: ${timeZone}`}
+          </span>
         </div>
       </div>
-
-      <p className="weather-widget__tz">
-        {status === 'loading'
-          ? 'Detectando tu zona horaria…'
-          : `Tu zona horaria: ${timeZone}`}
-      </p>
     </div>
   );
 }

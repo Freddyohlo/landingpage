@@ -241,6 +241,8 @@ function App() {
         {isMenuOpen && <div id="mobile-menu" className="border-t border-[#e4ebf0] bg-white px-5 py-4 md:hidden"><div className="flex flex-col gap-4 text-sm font-semibold">{NAV_LINKS.map(({ id, label }) => <button key={id} onClick={() => scrollTo(id)}>{label}</button>)}</div></div>}
       </header>
 
+      <WeatherWidget />
+
       <main id="inicio">
         <section className="hero-grid mx-auto grid max-w-[1180px] items-center gap-12 px-5 pb-24 pt-16 lg:grid-cols-[1fr_420px] lg:px-8 lg:pb-28 lg:pt-24">
           <div>
@@ -249,7 +251,6 @@ function App() {
             <p className="mt-7 max-w-[570px] text-[17px] leading-8 text-[#52677d]">Soy Freddy Pérez, profesional de operaciones y analista de sistemas en formación. Me gusta entender cómo funcionan las cosas y construir formas más simples de hacerlas mejor.</p>
             <div className="mt-9 flex flex-wrap gap-3"><button className="button-primary" onClick={() => scrollTo('proyectos')}>Ver mis proyectos <ArrowUpRight size={16} /></button><button className="button-quiet" onClick={() => scrollTo('sobre-mi')}>Conocer mi historia <ChevronDown size={16} /></button></div>
             <div className="mt-12 flex items-center gap-5 text-sm text-[#71859a]"><span className="flex items-center gap-2"><MapPin size={16} className="text-[#0a66c2]" /> Quilicura, Santiago</span><span className="h-1 w-1 rounded-full bg-[#a8b8c5]" /><span>Chile</span></div>
-            <WeatherWidget />
           </div>
           <div className="relative mx-auto w-full max-w-[420px]">
             <AssistantGuide onNavigate={scrollTo} />
