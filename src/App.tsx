@@ -36,6 +36,17 @@ const NAV_LINKS = [
 
 const projects: Project[] = [
   {
+    id: 'project-0',
+    title: 'Corredor · Remesas con stablecoins',
+    description: 'Demo no-custodial (testnet) para enviar remesas Chile → Venezuela / Haití con stablecoins: cotizador con costo total real, flujo por estados y screening de sanciones. Incluye enfoque de cumplimiento (Ley Fintech, AML, OFAC).',
+    tech_stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Web3'],
+    project_url: null,
+    repo_url: 'https://github.com/Freddyohlo/corredor',
+    image: '/images/corredor.png',
+    width: 1200,
+    height: 630,
+  },
+  {
     id: 'project-1',
     title: 'Web Inmobiliaria',
     description: 'Plataforma web para gestión y publicación de propiedades, con buscador avanzado y panel de administración.',
