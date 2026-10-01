@@ -79,11 +79,16 @@ button:disabled { cursor: wait; opacity: .7; }
 }
 
 /* Games section */
-.games-tabs { display: inline-flex; gap: 6px; margin-top: 32px; border: 1px solid #dce5ec; border-radius: 10px; background: white; padding: 5px; }
+.games-layout { display: grid; gap: 24px; margin-top: 32px; }
+@media (min-width: 1000px) {
+  .games-layout { grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr); align-items: start; }
+  .games-layout__play { min-width: 0; }
+}
+.games-tabs { display: inline-flex; gap: 6px; border: 1px solid #dce5ec; border-radius: 10px; background: white; padding: 5px; }
 .games-tab { display: inline-flex; align-items: center; gap: 7px; border-radius: 7px; padding: 9px 16px; font-size: 14px; font-weight: 700; color: #52677d; transition: all .2s ease; }
 .games-tab:hover { color: #0a66c2; }
 .games-tab--active { background: #0a66c2; color: white; }
-.games-stage { position: relative; overflow: hidden; margin-top: 24px; border: 1px solid #24365c; border-radius: 16px; background: radial-gradient(900px 380px at 50% -10%, #1d3a63 0%, #0d1a30 60%, #0a1526 100%); padding: 26px; box-shadow: 0 22px 50px rgba(9,18,35,.35), inset 0 1px 0 rgba(141,199,244,.12); }
+.games-stage { position: relative; overflow: hidden; margin-top: 16px; border: 1px solid #24365c; border-radius: 16px; background: radial-gradient(900px 380px at 50% -10%, #1d3a63 0%, #0d1a30 60%, #0a1526 100%); padding: 26px; box-shadow: 0 22px 50px rgba(9,18,35,.35), inset 0 1px 0 rgba(141,199,244,.12); }
 /* Subtle scanline texture: arcade feel without overwhelming the UI. */
 .games-stage::before { position: absolute; inset: 0; pointer-events: none; content: ''; background: repeating-linear-gradient(180deg, rgba(141,199,244,.035) 0 1px, transparent 1px 3px); }
 .games-stage > * { position: relative; }
@@ -136,6 +141,31 @@ button:disabled { cursor: wait; opacity: .7; }
   .games-stage { padding: 16px; }
   .sudoku__cell { font-size: 14px; }
 }
+
+/* News panel (right column of the games layout) */
+.news { display: flex; flex-direction: column; border: 1px solid #dce5ec; border-radius: 16px; background: white; padding: 18px; box-shadow: 0 14px 34px rgba(23,43,77,.06); }
+.news__head { display: flex; align-items: center; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid #eaf0f5; }
+.news__title { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: #172b4d; }
+.news__title svg { color: #0a66c2; }
+.news__refresh { display: grid; place-items: center; height: 28px; width: 28px; border-radius: 7px; color: #71859a; transition: all .2s ease; }
+.news__refresh:hover:not(:disabled) { background: #eaf2f8; color: #0a66c2; }
+.news__refresh:disabled { opacity: .6; cursor: default; }
+.news__spin { animation: news-spin .8s linear infinite; }
+@keyframes news-spin { to { transform: rotate(360deg); } }
+.news__list { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.news__item { display: flex; align-items: flex-start; gap: 11px; border-radius: 10px; padding: 10px 8px; transition: background .2s ease; }
+.news__item:hover { background: #f2f7fc; }
+.news__thumb { height: 52px; width: 68px; flex: none; border-radius: 8px; object-fit: cover; background: #eaf0f5; }
+.news__thumb--empty { display: grid; place-items: center; font-size: 20px; }
+.news__body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.news__item-title { font-size: 13px; font-weight: 600; line-height: 1.35; color: #172b4d; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.news__item:hover .news__item-title { color: #0a66c2; }
+.news__meta { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: #8b9bab; }
+.news__meta-icon { flex: none; }
+.news__empty { padding: 20px 0; text-align: center; font-size: 13px; color: #8b9bab; }
+.news__skeleton { height: 56px; margin: 6px 0; border-radius: 10px; background: linear-gradient(90deg, #eef3f8 25%, #e3ecf4 50%, #eef3f8 75%); background-size: 200% 100%; animation: news-shimmer 1.4s infinite; }
+@keyframes news-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.news__note { margin-top: 12px; padding-top: 10px; border-top: 1px solid #eaf0f5; font-size: 10px; color: #9aaaba; }
 .modal-panel { width: min(100%, 520px); overflow: hidden; border-radius: 14px; background: white; box-shadow: 0 25px 80px rgba(23,43,77,.25); }
 .form-label { display: flex; flex-direction: column; gap: 7px; color: #52677d; font-size: 13px; font-weight: 700; }
 .form-input { width: 100%; border: 1px solid #c8d5df; border-radius: 6px; padding: 11px 12px; color: #172b4d; outline: none; transition: border-color .2s ease, box-shadow .2s ease; }

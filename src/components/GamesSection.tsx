@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Gamepad2 } from 'lucide-react';
 import SnakeGame from '@/components/SnakeGame';
 import SudokuGame from '@/components/SudokuGame';
+import NewsPanel from '@/components/NewsPanel';
 
 type GameId = 'snake' | 'sudoku';
 
@@ -36,24 +37,32 @@ export default function GamesSection() {
           </span>
         </div>
 
-        <div className="games-tabs" role="tablist" aria-label="Elige un juego">
-          {GAMES.map((game) => (
-            <button
-              key={game.id}
-              role="tab"
-              aria-selected={active === game.id}
-              className={
-                'games-tab' + (active === game.id ? ' games-tab--active' : '')
-              }
-              onClick={() => setActive(game.id)}
-            >
-              <span aria-hidden="true">{game.emoji}</span> {game.label}
-            </button>
-          ))}
-        </div>
+        <div className="games-layout">
+          <div className="games-layout__play">
+            <div className="games-tabs" role="tablist" aria-label="Elige un juego">
+              {GAMES.map((game) => (
+                <button
+                  key={game.id}
+                  role="tab"
+                  aria-selected={active === game.id}
+                  className={
+                    'games-tab' + (active === game.id ? ' games-tab--active' : '')
+                  }
+                  onClick={() => setActive(game.id)}
+                >
+                  <span aria-hidden="true">{game.emoji}</span> {game.label}
+                </button>
+              ))}
+            </div>
 
-        <div className="games-stage">
-          {active === 'snake' ? <SnakeGame /> : <SudokuGame />}
+            <div className="games-stage">
+              {active === 'snake' ? <SnakeGame /> : <SudokuGame />}
+            </div>
+          </div>
+
+          <aside className="games-layout__news">
+            <NewsPanel />
+          </aside>
         </div>
       </div>
     </section>
