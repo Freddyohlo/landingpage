@@ -201,12 +201,11 @@ export default async function handler(req, res) {
     balanced.push(item);
   }
 
-  // Prefer items that already carry an image from the feed.
+  // Prefer items that already carry an image from the feed. Keep extras in
+  // reserve, since items whose og:image cannot be resolved are dropped later.
   const withImage = balanced.filter((item) => item.image);
   const withoutImage = balanced.filter((item) => !item.image);
-  // Keep a couple of extras in reserve, since items without a resolvable
-  // og:image are dropped afterwards.
-  const selected = [...withImage.slice(0, 6), ...withoutImage].slice(0, limit + 4);
+  const selected = [...withImage, ...withoutImage].slice(0, limit + 4);
 
   // Fill the gaps by reading og:image from the article pages, in parallel.
   await Promise.all(
