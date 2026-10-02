@@ -13,6 +13,7 @@ import {
 import AssistantGuide from '@/components/AssistantGuide';
 import WeatherWidget from '@/components/WeatherWidget';
 import GamesSection from '@/components/GamesSection';
+import MarketTicker from '@/components/MarketTicker';
 
 type Project = {
   id: string;
@@ -242,6 +243,7 @@ function App() {
       </header>
 
       <WeatherWidget />
+      <MarketTicker />
 
       <main id="inicio">
         <section className="hero-grid mx-auto grid max-w-[1180px] items-center gap-12 px-5 pb-24 pt-16 lg:grid-cols-[1fr_420px] lg:px-8 lg:pb-28 lg:pt-24">
