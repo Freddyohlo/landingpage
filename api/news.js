@@ -44,27 +44,47 @@ function pickTag(block, tag) {
   return decodeEntities(pickRaw(block, tag));
 }
 
+/**
+ * Image URLs come from XML attributes, so ampersands arrive as `&amp;`.
+ * Left as-is, the browser treats the query string as one broken parameter and
+ * the thumbnail fails to load, so entities must be decoded here.
+ */
+function cleanUrl(url) {
+  if (!url) return '';
+  const decoded = url
+    .replace(/&amp;/g, '&')
+    .replace(/&#38;/g, '&')
+    .replace(/&#x26;/gi, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .trim();
+
+  // Protocol-relative URLs are common; normalize them.
+  if (decoded.startsWith('//')) return `https:${decoded}`;
+  return decoded;
+}
+
 function pickImage(block) {
   // media:thumbnail is the most reliable image source.
   const thumb = block.match(/<media:thumbnail[^>]*url="([^"]+)"/i);
-  if (thumb) return thumb[1];
+  if (thumb) return cleanUrl(thumb[1]);
 
   // media:content, but only when it is an image (the tag also carries videos).
   const contentTags = block.match(/<media:content[^>]*>/gi) || [];
   for (const tag of contentTags) {
     if (/medium="image"/i.test(tag) || /type="image\//i.test(tag)) {
       const url = tag.match(/url="([^"]+)"/i);
-      if (url) return url[1];
+      if (url) return cleanUrl(url[1]);
     }
   }
 
   const enclosure = block.match(/<enclosure[^>]*url="([^"]+)"[^>]*type="image\/[^"]*"/i);
-  if (enclosure) return enclosure[1];
+  if (enclosure) return cleanUrl(enclosure[1]);
 
   // Fall back to the first <img> inside description/content.
   const body = `${pickRaw(block, 'description')} ${pickRaw(block, 'content:encoded')}`;
   const img = body.match(/<img[^>]*src="([^"]+)"/i);
-  if (img) return img[1];
+  if (img) return cleanUrl(img[1]);
 
   return '';
 }
@@ -145,10 +165,7 @@ async function fetchOgImage(url) {
       head.match(/<meta[^>]*content=["']([^"']+)["'][^>]*property=["']og:image["']/i);
     if (!match) return '';
 
-    // Protocol-relative URLs are common; normalize them.
-    const raw = match[1].trim();
-    if (raw.startsWith('//')) return `https:${raw}`;
-    return raw;
+    return cleanUrl(match[1]);
   } catch {
     return '';
   } finally {
