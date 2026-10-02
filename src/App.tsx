@@ -53,6 +53,17 @@ const projects: Project[] = [
     featured: true,
   },
   {
+    id: 'project-8',
+    title: 'Tamarugal · Terreno en venta',
+    description: 'Landing page de una sola vista para la venta de un terreno en la Pampa del Tamarugal: destaca atractivos, ubicación y potencial de inversión, y captura interesados con un formulario que guarda los leads en Supabase.',
+    tech_stack: ['React', 'TypeScript', 'Vite', 'Supabase', 'Tailwind CSS'],
+    project_url: null,
+    repo_url: 'https://github.com/Freddyohlo/terreno',
+    image: '/images/tamarugal.png',
+    width: 1200,
+    height: 630,
+  },
+  {
     id: 'project-1',
     title: 'Web Inmobiliaria',
     description: 'Plataforma web para gestión y publicación de propiedades, con buscador avanzado y panel de administración.',
