@@ -99,13 +99,12 @@ button:disabled { cursor: wait; opacity: .7; }
 /* Games section */
 .games-layout { display: grid; gap: 24px; margin-top: 32px; }
 @media (min-width: 1000px) {
-  /* stretch, not start: both columns must share the same row height */
-  .games-layout { grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr); align-items: stretch; }
+  /* The news column sets the row height; the game column matches it via JS. */
+  .games-layout { grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr); align-items: start; }
   .games-layout__play { display: flex; flex-direction: column; min-width: 0; }
-  /* the stage absorbs any leftover height so no gap is left under the board */
-  .games-stage { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; }
+  .games-stage { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
   .games-layout__news { display: flex; }
-  .news { flex: 1 1 auto; }
+  .news { flex: 0 0 auto; }
 }
 .games-tabs { display: inline-flex; gap: 6px; border: 1px solid #dce5ec; border-radius: 10px; background: white; padding: 5px; }
 .games-tab { display: inline-flex; align-items: center; gap: 7px; border-radius: 7px; padding: 9px 16px; font-size: 14px; font-weight: 700; color: #52677d; transition: all .2s ease; }
@@ -123,7 +122,7 @@ button:disabled { cursor: wait; opacity: .7; }
 .games-stage .button-primary:hover { background: #1a7fdd; }
 
 /* Snake */
-.snake { display: flex; flex: 1 1 auto; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
+.snake { display: flex; flex: 1 1 auto; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 0; }
 .snake__hud { display: flex; width: 100%; max-width: 520px; align-items: center; justify-content: space-between; font-size: 14px; color: #9fb6d1; }
 .snake__hud strong { color: white; font-variant-numeric: tabular-nums; }
 .snake__best { display: inline-flex; align-items: center; gap: 5px; color: #f0c05a; }
@@ -146,7 +145,7 @@ button:disabled { cursor: wait; opacity: .7; }
 .snake__hint { max-width: 480px; text-align: center; font-size: 12px; color: #7d93ad; }
 
 /* Sudoku */
-.sudoku { display: flex; flex: 1 1 auto; flex-direction: column; align-items: center; justify-content: center; gap: 18px; }
+.sudoku { display: flex; flex: 1 1 auto; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 0; }
 .sudoku__board { display: grid; grid-template-columns: repeat(9, 1fr); width: 100%; max-width: 420px; border: 2px solid #8dc7f4; border-radius: 8px; overflow: hidden; box-shadow: 0 0 22px rgba(10,102,194,.35); }
 .sudoku__cell { display: grid; place-items: center; aspect-ratio: 1; border: 1px solid #24365c; background: #0f2138; font-size: 16px; font-weight: 600; color: #7fd4ff; transition: background .15s ease; }
 .sudoku__cell:nth-child(9n+4), .sudoku__cell:nth-child(9n+7) { border-left: 2px solid #8dc7f4; }
@@ -175,7 +174,7 @@ button:disabled { cursor: wait; opacity: .7; }
 .news__refresh:disabled { opacity: .6; cursor: default; }
 .news__spin { animation: news-spin .8s linear infinite; }
 @keyframes news-spin { to { transform: rotate(360deg); } }
-.news__list { display: flex; flex: 1 1 auto; flex-direction: column; justify-content: space-between; margin: 0; padding: 0; list-style: none; }
+.news__list { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
 .news__item { display: flex; align-items: flex-start; gap: 11px; border-radius: 10px; padding: 10px 8px; transition: background .2s ease; }
 .news__item:hover { background: #f2f7fc; }
 .news__thumb { height: 52px; width: 68px; flex: none; border-radius: 8px; object-fit: cover; background: #eaf0f5; }
