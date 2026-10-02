@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Gamepad2 } from 'lucide-react';
 import SnakeGame from '@/components/SnakeGame';
 import SudokuGame from '@/components/SudokuGame';
@@ -11,39 +11,8 @@ const GAMES: { id: GameId; label: string; emoji: string }[] = [
   { id: 'sudoku', label: 'Sudoku', emoji: '🔢' },
 ];
 
-/** Below this width the two columns stack, so heights must not be forced. */
-const SIDE_BY_SIDE_MIN_WIDTH = 1000;
-
 export default function GamesSection() {
   const [active, setActive] = useState<GameId>('snake');
-  const newsRef = useRef<HTMLElement>(null);
-  const playRef = useRef<HTMLDivElement>(null);
-
-  // The news panel is the tallest column, so it defines the row height and the
-  // game area is stretched to match it. Doing this in JS avoids a circular
-  // layout: the game's own height can no longer inflate the row.
-  useEffect(() => {
-    const news = newsRef.current;
-    const play = playRef.current;
-    if (!news || !play) return;
-
-    const sync = () => {
-      if (window.innerWidth < SIDE_BY_SIDE_MIN_WIDTH) {
-        play.style.height = '';
-        return;
-      }
-      play.style.height = `${news.offsetHeight}px`;
-    };
-
-    sync();
-    const observer = new ResizeObserver(sync);
-    observer.observe(news);
-    window.addEventListener('resize', sync);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener('resize', sync);
-    };
-  }, []);
 
   return (
     <section
@@ -69,7 +38,7 @@ export default function GamesSection() {
         </div>
 
         <div className="games-layout">
-          <div className="games-layout__play" ref={playRef}>
+          <div className="games-layout__play">
             <div className="games-tabs" role="tablist" aria-label="Elige un juego">
               {GAMES.map((game) => (
                 <button
@@ -91,7 +60,7 @@ export default function GamesSection() {
             </div>
           </div>
 
-          <aside className="games-layout__news" ref={newsRef}>
+          <aside className="games-layout__news">
             <NewsPanel />
           </aside>
         </div>
