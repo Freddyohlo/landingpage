@@ -128,7 +128,7 @@ async function fetchFeed(source) {
  */
 async function fetchOgImage(url) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 5000);
+  const timer = setTimeout(() => controller.abort(), 8000);
 
   try {
     const response = await fetch(url, {
