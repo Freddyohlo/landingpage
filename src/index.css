@@ -78,6 +78,24 @@ button:disabled { cursor: wait; opacity: .7; }
   .weather-strip__item { font-size: 12px; }
 }
 
+/* Market ticker: marquee band under the weather strip */
+.ticker { overflow: hidden; border-bottom: 1px solid #e4ebf0; background: #f7fafc; }
+.ticker__track { display: inline-flex; align-items: center; gap: 34px; padding: 9px 20px; white-space: nowrap; animation: ticker-scroll 48s linear infinite; }
+.ticker:hover .ticker__track { animation-play-state: paused; }
+.ticker__item { display: inline-flex; align-items: baseline; gap: 7px; font-size: 12.5px; }
+.ticker__label { font-weight: 700; color: #52677d; }
+.ticker__value { font-weight: 700; color: #172b4d; font-variant-numeric: tabular-nums; }
+.ticker__change { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ticker__change.is-up { color: #1c8a4b; }
+.ticker__change.is-down { color: #c0392b; }
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ticker__track { animation: none; }
+}
+
 /* Games section */
 .games-layout { display: grid; gap: 24px; margin-top: 32px; }
 @media (min-width: 1000px) {
