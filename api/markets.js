@@ -11,11 +11,15 @@ const USER_AGENT =
 /** Global markets, via Yahoo Finance. */
 const YAHOO_SYMBOLS = [
   { id: 'sp500', label: 'S&P 500', symbol: '^GSPC', kind: 'index' },
+  { id: 'nasdaq', label: 'Nasdaq', symbol: '^IXIC', kind: 'index' },
   { id: 'gold', label: 'Oro', symbol: 'GC=F', kind: 'usd' },
+  { id: 'silver', label: 'Plata', symbol: 'SI=F', kind: 'usd' },
+  { id: 'copper', label: 'Cobre', symbol: 'HG=F', kind: 'usd' },
   { id: 'oil', label: 'Petróleo', symbol: 'CL=F', kind: 'usd' },
   { id: 'usdclp', label: 'Dólar', symbol: 'USDCLP=X', kind: 'clp' },
-  { id: 'nasdaq', label: 'Nasdaq', symbol: '^IXIC', kind: 'index' },
+  { id: 'eurusd', label: 'Euro', symbol: 'EURUSD=X', kind: 'fx' },
   { id: 'btc', label: 'Bitcoin', symbol: 'BTC-USD', kind: 'usd' },
+  { id: 'eth', label: 'Ethereum', symbol: 'ETH-USD', kind: 'usd' },
 ];
 
 async function fetchYahoo(entry) {
@@ -108,7 +112,7 @@ export default async function handler(req, res) {
   const markets = yahooResults.filter(Boolean);
 
   // Keep a stable order: equities, commodities, currency, crypto, then local.
-  const order = ['sp500', 'nasdaq', 'gold', 'oil', 'usdclp', 'btc'];
+  const order = ['sp500', 'nasdaq', 'gold', 'silver', 'copper', 'oil', 'usdclp', 'eurusd', 'btc', 'eth'];
   markets.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
 
   res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');

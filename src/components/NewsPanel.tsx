@@ -28,6 +28,7 @@ export default function NewsPanel() {
   const [items, setItems] = useState<NewsItem[]>([]);
   const [status, setStatus] = useState<Status>('loading');
   const [refreshing, setRefreshing] = useState(false);
+  const [failed, setFailed] = useState<Record<string, boolean>>({});
 
   async function load() {
     setRefreshing(true);
@@ -87,17 +88,16 @@ export default function NewsPanel() {
           {items.map((item) => (
             <li key={item.link}>
               <a className="news__item" href={item.link} target="_blank" rel="noreferrer">
-                {item.image ? (
+                {item.image && !failed[item.link] ? (
                   <img
                     className="news__thumb"
                     src={item.image}
                     alt=""
                     loading="lazy"
                     decoding="async"
-                    onError={(event) => {
-                      // Hide broken thumbnails rather than showing a broken icon.
-                      (event.currentTarget as HTMLImageElement).style.display = 'none';
-                    }}
+                    onError={() =>
+                      setFailed((current) => ({ ...current, [item.link]: true }))
+                    }
                   />
                 ) : (
                   <span className="news__thumb news__thumb--empty" aria-hidden="true">

@@ -12,6 +12,7 @@ const USER_AGENT =
 const SOURCES = [
   { name: 'Google News Chile', url: 'https://news.google.com/rss?hl=es-419&gl=CL&ceid=CL:es-419' },
   { name: 'DUPLOS', url: 'https://www.duplos.cl/feed/' },
+  { name: 'Publimetro', url: 'https://www.publimetro.cl/arc/outboundfeeds/rss/' },
   { name: 'The Clinic', url: 'https://www.theclinic.cl/feed/' },
   { name: 'CIPER Chile', url: 'https://www.ciperchile.cl/feed/' },
   { name: 'El Periodista', url: 'https://www.elperiodista.cl/feed/' },
@@ -120,6 +121,41 @@ async function fetchFeed(source) {
   }
 }
 
+/**
+ * Most Chilean feeds omit images, but every article page carries an og:image
+ * meta tag. Fetching the article lets the panel show a thumbnail for all news,
+ * keeping the list visually uniform.
+ */
+async function fetchOgImage(url) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 5000);
+
+  try {
+    const response = await fetch(url, {
+      headers: { 'User-Agent': USER_AGENT, Accept: 'text/html' },
+      signal: controller.signal,
+    });
+    if (!response.ok) return '';
+
+    // Only the <head> matters, so stop reading once the body starts.
+    const html = await response.text();
+    const head = html.slice(0, 120000);
+    const match =
+      head.match(/<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']+)["']/i) ||
+      head.match(/<meta[^>]*content=["']([^"']+)["'][^>]*property=["']og:image["']/i);
+    if (!match) return '';
+
+    // Protocol-relative URLs are common; normalize them.
+    const raw = match[1].trim();
+    if (raw.startsWith('//')) return `https:${raw}`;
+    return raw;
+  } catch {
+    return '';
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export default async function handler(req, res) {
   const limit = Math.min(Number(req.query?.limit) || 6, 12);
 
@@ -138,12 +174,36 @@ export default async function handler(req, res) {
 
   unique.sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0));
 
-  // Prefer items that carry an image so the panel keeps its visual weight.
-  const withImage = unique.filter((item) => item.image);
-  const withoutImage = unique.filter((item) => !item.image);
-  const selected = [...withImage.slice(0, 3), ...withoutImage].slice(0, limit);
+  // Cap each outlet so one prolific source cannot dominate the list.
+  const perSource = new Map();
+  const balanced = [];
+  for (const item of unique) {
+    const count = perSource.get(item.source) || 0;
+    if (count >= 2) continue;
+    perSource.set(item.source, count + 1);
+    balanced.push(item);
+  }
+
+  // Prefer items that already carry an image from the feed.
+  const withImage = balanced.filter((item) => item.image);
+  const withoutImage = balanced.filter((item) => !item.image);
+  // Keep a couple of extras in reserve, since items without a resolvable
+  // og:image are dropped afterwards.
+  const selected = [...withImage.slice(0, 6), ...withoutImage].slice(0, limit + 4);
+
+  // Fill the gaps by reading og:image from the article pages, in parallel.
+  await Promise.all(
+    selected.map(async (item) => {
+      if (item.image) return;
+      item.image = await fetchOgImage(item.link);
+    }),
+  );
+
+  // Drop anything still without a photo so every row looks the same.
+  const withPhotos = selected.filter((item) => item.image);
+  const finalItems = (withPhotos.length >= 4 ? withPhotos : selected).slice(0, limit);
 
   res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=1200');
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  res.status(200).json({ updatedAt: new Date().toISOString(), items: selected });
+  res.status(200).json({ updatedAt: new Date().toISOString(), items: finalItems });
 }
