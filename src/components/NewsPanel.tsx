@@ -33,7 +33,7 @@ export default function NewsPanel() {
   async function load() {
     setRefreshing(true);
     try {
-      const response = await fetch('/api/news?limit=6');
+      const response = await fetch('/api/news?limit=9');
       if (!response.ok) throw new Error('bad status');
       const data = await response.json();
       setItems(Array.isArray(data.items) ? data.items : []);
@@ -116,6 +116,16 @@ export default function NewsPanel() {
             </li>
           ))}
         </ul>
+      )}
+
+      {status === 'ready' && items.length > 0 && (
+        <p className="news__foot">
+          Mostrando {items.length} titulares · Actualizado{' '}
+          {new Date().toLocaleTimeString('es-CL', {
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
+        </p>
       )}
     </div>
   );

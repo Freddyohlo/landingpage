@@ -174,7 +174,7 @@ async function fetchOgImage(url) {
 }
 
 export default async function handler(req, res) {
-  const limit = Math.min(Number(req.query?.limit) || 6, 12);
+  const limit = Math.min(Number(req.query?.limit) || 9, 12);
 
   const results = await Promise.all(SOURCES.map(fetchFeed));
   const all = results.flat();
