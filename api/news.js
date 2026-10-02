@@ -191,12 +191,14 @@ export default async function handler(req, res) {
 
   unique.sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0));
 
-  // Cap each outlet so one prolific source cannot dominate the list.
+  // Cap each outlet so one prolific source cannot dominate the list. The cap
+  // is generous because some feeds (Google News, DUPLOS, CIPER) are blocked
+  // from datacenter IPs and contribute nothing in production.
   const perSource = new Map();
   const balanced = [];
   for (const item of unique) {
     const count = perSource.get(item.source) || 0;
-    if (count >= 2) continue;
+    if (count >= 3) continue;
     perSource.set(item.source, count + 1);
     balanced.push(item);
   }
