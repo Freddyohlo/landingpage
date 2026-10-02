@@ -6,12 +6,15 @@ type MarketItem = {
   label: string;
   value: number;
   changePct: number | null;
-  kind: 'index' | 'usd' | 'clp' | 'pct';
+  kind: 'index' | 'usd' | 'clp' | 'fx' | 'pct';
 };
 
 function formatValue(item: MarketItem): string {
   if (item.kind === 'pct') {
     return `${item.value > 0 ? '+' : ''}${item.value.toFixed(1)}%`;
+  }
+  if (item.kind === 'fx') {
+    return item.value.toFixed(4);
   }
   const decimals = item.value >= 1000 ? 0 : 2;
   return new Intl.NumberFormat('es-CL', {
